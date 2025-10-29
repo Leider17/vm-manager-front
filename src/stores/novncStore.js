@@ -11,8 +11,6 @@ export const useNovncStore = defineStore('novnc', () => {
         loading.value = true
         error.value = null
         try {
-            console.log(vm_name)
-            
             const response = await noVncService.connectToVnc( vm_name, user_id )
             return response.websocket_url
         } catch (error) {
