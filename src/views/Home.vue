@@ -1,16 +1,19 @@
 <template>
     <Header />
-    <div class="flex flex-col justify-center items-center h-screen md:flex-row">
-        <MvCard v-for="(vm, index) in mvStore.mvs" :key="index" class="ml-10 p-6" :state="vm.state" :name="vm.name" :type="vm.type" />
+    <div class="flex flex-col justify-center items-center h-screen" v-if="mvStore.loading">
+        <Loading class="h-50"/>
+    </div>
+    <div class="flex flex-col justify-center items-center h-screen md:flex-row" v-if="!mvStore.loading">
+        <MvCard v-for="(vm, index) in mvStore.mvs" :key="index" class="ml-10 p-6" :state="vm.state" :name="vm.name" :type_name="vm.type_name" />
         <p v-if="mvStore.mvs.length === 0"> No existen máquinas creadas aún</p>
 
-        <Popup v-model="showWindow">
+        <Popup v-model="showWindow" >
             <h2 class="text-center font-bold text-2xl font-serif mb-10">CREAR MÁQUINA</h2>
-            <form @submit.prevent="handleSubmit">
+            <form @submit.prevent="handleSubmit"> 
                 <!-- <div class="flex gap-1 items-center mb-3 flex-col md:flex-row">
                     <LabelForm >Nombre:</LabelForm>
                     <InputForm v-model="v$.name.$model" type="text" placeholder="Nombre de tu máquina" required />
-                </div>
+                </div> 
                 <div v-if="v$.name.$error && v$.name.$dirty">
                     <MessageError v-if="v$.name.required.$invalid">el nombre es requerido.</MessageError>
                     <MessageError v-if="v$.name.minLength.$invalid">el nombre debe tener al menos 4 caracteres.</MessageError>
@@ -36,27 +39,28 @@
     import useVuelidate from '@vuelidate/core'
     import { required, minLength } from '@vuelidate/validators'
     import { useMvStore } from '../stores/mvStore'
-    import { useNovncStore } from '../stores/novncStore'
+    // import { useNovncStore } from '../stores/novncStore'
     import { useAuthStore } from '../stores/authStore'
     import { useTypeStore } from '../stores/typeStore'
-    import router from '../router/index'
+
     import MessageError from '../components/form/MessageError.vue'
     import Header from '../components/layout/Header.vue'
     import MvCard from '../components/ui/MvCard.vue'
     import Button from '../components/ui/Button.vue'
     import Popup from '../components/ui/Popup.vue'
     import LabelForm from '../components/form/LabelForm.vue'
+    import Loading from '../components/ui/Loading.vue'
     // import InputForm from '../components/form/InputForm.vue'
     import SelectForm from '../components/form/SelectForm.vue'
 
     const mvStore = useMvStore()
-    const novncStore = useNovncStore()
+    // const novncStore = useNovncStore()
     const authStore = useAuthStore()
     const typeStore = useTypeStore()
     
     const showWindow = ref(false)
     const userId = ref(null)
-    const websocketUrl = ref("")
+    // const websocketUrl = ref("")
 
     const formData = reactive({
         // name: '',
@@ -79,14 +83,14 @@
         v$.value.$touch()
         if (v$.value.$invalid) return
         const provisionResult = await mvStore.provisionVm(userId.value, String(formData.type) )
-        const vm_name = provisionResult.vm_name
-        const novncResult = await  novncStore.connectNovnc(vm_name, userId.value)
-        showWindow.value = true
-        websocketUrl.value =  novncResult
+        // const vm_name = provisionResult.vm_name
+        // const novncResult = await  novncStore.connectNovnc(vm_name, userId.value)
+        showWindow.value = false
+        // websocketUrl.value =  novncResult
 
-        // const routerData = router.resolve({ name: 'WindowMv', params: { websocketUrl: websocketUrl.value } })
-        // window.open(routerData.href, '_blank')
-        router.push({ name: 'WindowMv', params: { websocketUrl: websocketUrl.value } })
+        // // const routerData = router.resolve({ name: 'WindowMv', params: { websocketUrl: websocketUrl.value } })
+        // // window.open(routerData.href, '_blank')
+        // router.push({ name: 'WindowMv', params: { websocketUrl: websocketUrl.value } })
     }
 
     const handleCreate = () => {
