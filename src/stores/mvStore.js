@@ -8,13 +8,45 @@ export const useMvStore = defineStore('mv', () => {
     const loading = ref(false)
     const error = ref(null)
 
+    const socket = ref(null)
+    const isConnected = ref(false)
+
+    const connectWebSocket = (url) => {
+        if (socket.value) {
+            return;
+        }
+
+        const ws = new WebSocket(url);
+
+        ws.onopen = () => {
+            socket.value = ws;
+            isConnected.value = true;
+        };
+
+        ws.onmessage = (event) => {
+            const update = JSON.parse(event.data);
+            const index = mvs.value.findIndex(vm => vm.name === update.vm_name)
+            if (index !== -1) mvs.value[index].state = update.event
+
+        };
+
+        ws.onclose = () => {
+            isConnected.value = false;
+            socket.value = null;            
+        };
+
+        ws.onerror = (err) => {
+            console.error("WebSocket Error:", err);
+        };
+    }
+
     const provisionVm = async (userId, vmType) => {
         loading.value = true
         error.value = null
 
         try {
             const result = await mvService.provisionVm(userId, vmType)
-            mvs.value.push(result)
+            mvs.value.push(result.vm)
             return result
         } catch (err) {
             error.value = err.message
@@ -31,7 +63,7 @@ export const useMvStore = defineStore('mv', () => {
             const result = await mvService.startVm(vm_name)
             const index = mvs.value.findIndex(vm => vm.name === vm_name)
 
-            mvs.value[index] = { ...result.vm }
+            mvs.value[index] = { ...result }
             return true
         } catch (err) {
             error.value = err.message
@@ -48,7 +80,7 @@ export const useMvStore = defineStore('mv', () => {
             const result = await mvService.stopVm(vm_name)
             const index = mvs.value.findIndex(vm => vm.name === vm_name)
 
-            mvs.value[index] = { ...result.vm }
+            mvs.value[index] = { ...result }
             return true
         } catch (err) {
             error.value = err.message
@@ -83,6 +115,7 @@ export const useMvStore = defineStore('mv', () => {
 
         try {
             mvs.value = await mvService.getVmsUser(userId)
+            console.log(mvs.value)
         } catch (error) {
             error.value = error.message
         } finally {
@@ -121,6 +154,7 @@ export const useMvStore = defineStore('mv', () => {
     return {
         mvs,
         mv,
+        connectWebSocket,
         provisionVm,
         startVm,
         stopVm,

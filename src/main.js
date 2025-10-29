@@ -4,6 +4,7 @@ import './index.css'
 import router from './router'
 import { createPinia } from 'pinia'
 import { useAuthStore } from "./stores/authStore";
+import { useMvStore } from './stores/mvStore'
 
 const pinia = createPinia();
 const app = createApp(App);
@@ -11,7 +12,9 @@ const app = createApp(App);
 app.use(pinia);
 
 const authStore = useAuthStore(); 
-authStore.initializeAuth();                           
+const mvStore = useMvStore();
+authStore.initializeAuth(); 
+mvStore.connectWebSocket("ws://localhost:8000/ws")                          
 
 
 createApp(App).use(router).use(pinia).mount('#app');
