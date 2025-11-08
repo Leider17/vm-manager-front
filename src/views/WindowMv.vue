@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-    import { onMounted, ref, watch } from 'vue'
+    import { onMounted, ref, } from 'vue'
     import { useRoute } from 'vue-router'
 
     import RFB from "../static/noVNC/core/rfb.js";
@@ -17,6 +17,7 @@
             console.error("No websocketUrl provided")
             return
         }
+        document.title = route.query.name
         const websocketUrl = route.params.websocketUrl
 
         const rfb = new RFB(screen.value, websocketUrl)
