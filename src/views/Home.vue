@@ -3,9 +3,11 @@
     <div class="flex flex-col justify-center items-center h-screen" v-if="mvStore.loading">
         <Loading class="h-50"/>
     </div>
-    <div class="flex flex-col justify-center items-center h-screen md:flex-row" v-if="!mvStore.loading">
-        <MvCard v-for="(vm, index) in mvStore.mvs" :key="index" class="ml-10 p-6" :state="vm.state" :name="vm.name" :type_name="vm.type_name" />
-        <p v-if="mvStore.mvs.length === 0"> No existen máquinas creadas aún</p>
+    <h1 class="text-4xl text-gray-700 font-medium mt-5 ml-5">Mis máquinas</h1>
+    <Button class="mt-12 ml-5" @click="handleCreate">Crear Máquina Virtual</Button>
+    <div class="flex mt-20 gap-5 justify-center md:justify-start md:ml-5 flex-row flex-wrap" v-if="!mvStore.loading">
+        <MvCard v-for="(vm, index) in mvStore.mvs" :key="index" class=" mb-5 p-6" :state="vm.state" :name="vm.name" :type_name="vm.type_name" />
+        <p class="mx-10" v-if="mvStore.mvs.length === 0"> No existen máquinas creadas aún</p>
 
         <Popup v-model="showWindow" >
             <h2 class="text-center font-bold text-2xl font-serif mb-10">CREAR MÁQUINA</h2>
@@ -31,7 +33,22 @@
             </form>
         </Popup>
 
-        <Button class="absolute bottom-10 right-10" @click="handleCreate">Crear Máquina Virtual</Button>
+        <Popup v-model="mvStore.provisionLoading" :close-to-click="false">
+        <div class="flex flex-col items-center">
+            <Loading class="h-20"/>
+            <h3>Por favor espere un momento mientras creamos su máquina...</h3>
+        </div>
+        </Popup>
+
+        <Popup v-model="hasError" :close-to-click="false">
+            <div class="flex flex-col items-center">
+                <h3>Lo sentimos tenemos un error:</h3>
+                <p>{{ mvStore.error }}</p>
+                <img src="/images/error.png" alt="" class="h-10 my-5"/>
+                <Button @click="mvStore.error = null">Ok</Button>
+            </div>
+        </Popup>
+            
     </div>
 </template>
 <script setup>
@@ -59,6 +76,7 @@
     const typeStore = useTypeStore()
     
     const showWindow = ref(false)
+        const hasError = computed(() => !!mvStore.error)
     const userId = ref(null)
     // const websocketUrl = ref("")
 
@@ -82,15 +100,8 @@
     const handleSubmit = async ( ) => {
         v$.value.$touch()
         if (v$.value.$invalid) return
-        const provisionResult = await mvStore.provisionVm(userId.value, String(formData.type) )
-        // const vm_name = provisionResult.vm_name
-        // const novncResult = await  novncStore.connectNovnc(vm_name, userId.value)
+        await mvStore.provisionVm(userId.value, String(formData.type) )
         showWindow.value = false
-        // websocketUrl.value =  novncResult
-
-        // // const routerData = router.resolve({ name: 'WindowMv', params: { websocketUrl: websocketUrl.value } })
-        // // window.open(routerData.href, '_blank')
-        // router.push({ name: 'WindowMv', params: { websocketUrl: websocketUrl.value } })
     }
 
     const handleCreate = () => {

@@ -1,5 +1,5 @@
     import { API_URL, handleResponse } from "./api";
-    import router from "../routes/router";
+    import router from "../router/index";
 
     async function apiClient ( endpoint, options) {
         const accessToken = localStorage.getItem('access_token')
@@ -14,7 +14,7 @@
             throw new Error("access token not found")
         }
 
-        if (options?.body && !(options.body instanceof FormData) && !headers['Content-Type'])  headers['Content-Type'] = 'application/json'
+        if (options?.body && !headers['Content-Type'])  headers['Content-Type'] = 'application/json'
 
         const config = {...options, headers: headers,}
         const response = await fetch(`${API_URL}${endpoint}`, config)
@@ -24,8 +24,8 @@
 
     export const http = {
         get: (endpoint , options) => apiClient (endpoint, { ...options, method: 'GET' }),
-        post: (endpoint, body, options) => apiClient(endpoint, { ...options, method: 'POST', body: body instanceof FormData ? body : JSON.stringify(body) }),
-        put: (endpoint, body, options) => apiClient(endpoint, { ...options, method: 'PUT', body: body instanceof FormData ? body : JSON.stringify(body) }),
-        patch: (endpoint, body, options) => apiClient(endpoint, { ...options, method: 'PATCH', body: body instanceof FormData ? body : JSON.stringify(body) }),
+        post: (endpoint, body, options) => apiClient(endpoint, { ...options, method: 'POST', body:  JSON.stringify(body) }),
+        put: (endpoint, body, options) => apiClient(endpoint, { ...options, method: 'PUT', body: JSON.stringify(body) }),
+        patch: (endpoint, body, options) => apiClient(endpoint, { ...options, method: 'PATCH', body: JSON.stringify(body) }),
         delete: (endpoint, options) => apiClient(endpoint, { ...options, method: 'DELETE' }),
     }

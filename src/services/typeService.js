@@ -1,18 +1,10 @@
-import { API_URL, handleResponse } from "./api"
+import { http } from "./apiClient";
 
-
-const authApiUrl = `${API_URL}/type`
+const apiUrl = "/type"
 
 export const typeService = {
 
     async getAllTypes () {
-        const response = await fetch (`${authApiUrl}/all`,{
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-
-        return handleResponse(response)
+        return http.get(`${apiUrl}/all`);
     }
 }

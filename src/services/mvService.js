@@ -1,88 +1,46 @@
-import { API_URL, handleResponse } from "./api"
+import { http } from "./apiClient"
 
 
-const authApiUrl = `${API_URL}/vm`
+const apiUrl = "/vm"
 
 export const mvService = {
     async provisionVm(userId, vmType) {
-        console.log(vmType)
-        const response = await fetch(`${authApiUrl}/provision`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ UserId: userId, vmType: vmType }),
-        })
-
-        return handleResponse(response)
+        const data = { UserId: userId, vmType: vmType }
+        return http.post(`${apiUrl}/provision`, data)
     },
 
     async startVm(vm_name) {
-        const response = await fetch(`${authApiUrl}/start`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ vm_name }),
-        })
-
-        return handleResponse(response)
+        const data = { vm_name }
+        return http.post(`${apiUrl}/start`, data)
     },
 
     async stopVm(vm_name) {
-        const response = await fetch(`${authApiUrl}/stop`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ vm_name }),
-        })
-
-        return handleResponse(response)
+        const data = { vm_name }
+        return http.post(`${apiUrl}/stop`, data)
     },
 
     async destroyVm(vm_name) {
-        const response = await fetch(`${authApiUrl}/destroy`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ vm_name }),
-        })
-
-        return handleResponse(response)
+        const data = { vm_name }
+        return http.post(`${apiUrl}/destroy`, data)
     },
 
     async getVmsUser (userId) {
-        const response = await fetch(`${authApiUrl}/${userId}`,{
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        })
-
-        return handleResponse(response)
+        return http.get(`${apiUrl}/${userId}`)
     },
 
     async getAllVms () {
-        const response = await fecth (`${authApiUrl}/all`,{
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-
-        return handleResponse(response)
+        return http.get(`${apiUrl}/all`)
     },
 
     async getInfoVm (vm_name) {
-        const response = await fecth (`${authApiUrl}/info/${vm_name}`,{
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
+        return http.get(`${apiUrl}/${vm_name}`)
+    },
 
-        return handleResponse(response)
+    async shutdownVmUser (userId){
+        return http.post(`${apiUrl}/shutdown/all/${userId}`)
+    },
+
+    async shutdownVmAll (){
+        return http.post(`${apiUrl}/shutdown/all`)
     }
 }

@@ -6,6 +6,7 @@ export const useMvStore = defineStore('mv', () => {
     const mvs = ref([])
     const mv = ref(null)
     const loading = ref(false)
+    const provisionLoading = ref(false)
     const error = ref(null)
 
     const socket = ref(null)
@@ -41,17 +42,17 @@ export const useMvStore = defineStore('mv', () => {
     }
 
     const provisionVm = async (userId, vmType) => {
-        loading.value = true
+        provisionLoading.value = true
         error.value = null
 
         try {
             const result = await mvService.provisionVm(userId, vmType)
-            mvs.value.push(result.vm)
+            mvs.value.push(result)
             return result
         } catch (err) {
             error.value = err.message
         } finally {
-            loading.value = false
+            provisionLoading.value = false
         }
     }
 
@@ -115,7 +116,6 @@ export const useMvStore = defineStore('mv', () => {
 
         try {
             mvs.value = await mvService.getVmsUser(userId)
-            console.log(mvs.value)
         } catch (error) {
             error.value = error.message
         } finally {
@@ -144,6 +144,19 @@ export const useMvStore = defineStore('mv', () => {
         try {
             const info = await mvService.getInfoVm(vmName)
             return info
+        } catch (err) {
+            error.value = err.message
+        } finally {
+            loading.value = false
+        }
+    }
+
+    const shutdownVmsUser = async (userId) => {
+        loading.value = true
+        error.value = null
+
+        try {
+            await mvService.shutdownVmUser(userId)
         } catch (error) {
             error.value = error.message
         } finally {
@@ -162,7 +175,9 @@ export const useMvStore = defineStore('mv', () => {
         getVmsUser,
         getAllVms,
         getInfoVm,
+        shutdownVmsUser,
         loading,
+        provisionLoading,
         error
     }
 })

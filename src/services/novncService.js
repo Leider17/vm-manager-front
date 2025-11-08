@@ -1,17 +1,13 @@
-import { API_URL, handleResponse } from "./api"
+import { http } from "./apiClient"
 
 
-const authApiUrl = `${API_URL}/novnc`
+const apiUrl = `/novnc`
 
 
 export const noVncService = {
-
     async connectToVnc ( vm_name, user_id ) {
-        const response = await fetch(`${authApiUrl}/connect`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json"},
-            body: JSON.stringify({ vm_name: vm_name, user_id: parseInt(user_id)  }),
-        })
-        return handleResponse(response)
+        const data = { vm_name,user_id }
+        return http.post(`${apiUrl}/connect`, data)
     }
+        
 }

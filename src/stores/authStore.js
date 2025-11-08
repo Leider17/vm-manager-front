@@ -1,5 +1,6 @@
 import { defineStore} from 'pinia'
 import { authService } from '../services/authService'
+import { useMvStore } from './mvStore'
 import router from '../router/index'
 import { ref , computed} from 'vue'
 
@@ -13,6 +14,8 @@ export const useAuthStore = defineStore('auth', () => {
     const error = ref(null)
 
     const isAuthenticated = computed(() => user.value && access_token.value)
+
+    const mvStore = useMvStore()
 
     const initializeAuth = () => {
         const accessToken = localStorage.getItem('access_token')
@@ -62,13 +65,14 @@ export const useAuthStore = defineStore('auth', () => {
             router.push('/')
             return true
         } catch (err) {
-            error.value = err.message || 'Login failed'
+            error.value = err.message
         } finally {
             loading.value = false
         }
     }
 
-    const logout = () => {
+    const logout = async () => {
+        await mvStore.shutdownVmsUser(current_user.value?.id)
         authService.logout()
         user.value = {}
         access_token.value = null
