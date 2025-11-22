@@ -18,7 +18,7 @@ export const authService = {
         
         formData.append("username", credentials.email)
         formData.append("password", credentials.password)
-
+        console.log(authApiUrl)
         const response = await fetch(`${authApiUrl}/login`, {
             method: "POST",
             headers: {

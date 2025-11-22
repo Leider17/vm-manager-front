@@ -4,6 +4,7 @@ import { mvService } from '../services/mvService'
 
 export const useMvStore = defineStore('mv', () => {
     const mvs = ref([])
+    const allMvs = ref([])
     const mv = ref(null)
     const loading = ref(false)
     const provisionLoading = ref(false)
@@ -128,8 +129,7 @@ export const useMvStore = defineStore('mv', () => {
         error.value = null
 
         try {
-            const allVms = await mvService.getAllVms()
-            return allVms
+            allMvs.value = await mvService.getAllVms()
         } catch (error) {
             error.value = error.message
         } finally {
@@ -166,6 +166,7 @@ export const useMvStore = defineStore('mv', () => {
 
     return {
         mvs,
+        allMvs,
         mv,
         connectWebSocket,
         provisionVm,
