@@ -6,7 +6,7 @@
     import { onMounted, ref, } from 'vue'
     import { useRoute } from 'vue-router'
 
-    import RFB from "@/static/noVNC/core/rfb.js";
+    import RFB from "/static/noVNC/core/rfb.js";
 
     const route = useRoute()
 
