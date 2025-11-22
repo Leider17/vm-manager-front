@@ -14,7 +14,7 @@ app.use(pinia);
 const authStore = useAuthStore(); 
 const mvStore = useMvStore();
 authStore.initializeAuth(); 
-mvStore.connectWebSocket("ws://localhost:8000/ws")                          
+mvStore.connectWebSocket("ws://http://192.99.37.28:8000/ws")                          
 
 
 createApp(App).use(router).use(pinia).mount('#app');
