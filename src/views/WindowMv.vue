@@ -6,8 +6,6 @@
     import { onMounted, ref, } from 'vue'
     import { useRoute } from 'vue-router'
 
-    import RFB from "/static/noVNC/core/rfb.js";
-
     const route = useRoute()
 
     const screen = ref(null)
@@ -17,6 +15,7 @@
             console.error("No websocketUrl provided")
             return
         }
+        const RFB = (await import('/noVnc/core/rfb.js')).default
         document.title = route.query.name
         const websocketUrl = route.params.websocketUrl
 
