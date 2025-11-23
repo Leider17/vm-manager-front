@@ -20,7 +20,7 @@
         document.title = route.query.name
         const websocketUrl = route.params.websocketUrl
 
-        const rfb = new window.RFB(screen.value, websocketUrl,{
+        const rfb = new RFB(screen.value, websocketUrl,{
             compressionLevel: 5,
             qualityLevel: 2,
             enableWebP: true
