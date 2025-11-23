@@ -70,7 +70,7 @@
             await mvStore.startVm(props.name)
 
             websocketUrl.value = await novncStore.connectNovnc(props.name,  authStore.current_user?.id)
-            const routerData = router.resolve({ name: 'WindowMv', params: { websocketUrl: websocketUrl.value }, query: {name: props.name + '-' + props.type_name} })
+            const routerData = router.resolve({ name: 'WindowMv', query: { websocketUrl: websocketUrl.value, name: props.name + '-' + props.type_name} })
             if (win) win.location = routerData.href
         }
 
