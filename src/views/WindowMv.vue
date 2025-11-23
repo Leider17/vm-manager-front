@@ -10,7 +10,7 @@
 
     const screen = ref(null)
 
-    onMounted(() => {
+    onMounted(async () => {
         if (!route.params.websocketUrl) {
             console.error("No websocketUrl provided")
             return
