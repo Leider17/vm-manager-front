@@ -1,4 +1,10 @@
-export default function ZStream() {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = ZStream;
+function ZStream() {
   /* next input byte */
   this.input = null; // JS specific, because we have no pointers
   this.next_in = 0;
@@ -14,11 +20,11 @@ export default function ZStream() {
   /* total number of bytes output so far */
   this.total_out = 0;
   /* last error message, NULL if no error */
-  this.msg = ''/*Z_NULL*/;
+  this.msg = '' /*Z_NULL*/;
   /* not visible by applications */
   this.state = null;
   /* best guess about the data type: binary or text */
-  this.data_type = 2/*Z_UNKNOWN*/;
+  this.data_type = 2 /*Z_UNKNOWN*/;
   /* adler32 value of the uncompressed data */
   this.adler = 0;
 }

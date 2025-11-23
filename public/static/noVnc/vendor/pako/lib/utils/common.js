@@ -1,13 +1,25 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Buf8 = exports.Buf32 = exports.Buf16 = void 0;
+exports.arraySet = arraySet;
+exports.flattenChunks = flattenChunks;
+exports.shrinkBuf = shrinkBuf;
 // reduce buffer size, avoiding mem copy
-export function shrinkBuf (buf, size) {
-  if (buf.length === size) { return buf; }
-  if (buf.subarray) { return buf.subarray(0, size); }
+function shrinkBuf(buf, size) {
+  if (buf.length === size) {
+    return buf;
+  }
+  if (buf.subarray) {
+    return buf.subarray(0, size);
+  }
   buf.length = size;
   return buf;
-};
-
-
-export function arraySet (dest, src, src_offs, len, dest_offs) {
+}
+;
+function arraySet(dest, src, src_offs, len, dest_offs) {
   if (src.subarray && dest.subarray) {
     dest.set(src.subarray(src_offs, src_offs + len), dest_offs);
     return;
@@ -19,7 +31,7 @@ export function arraySet (dest, src, src_offs, len, dest_offs) {
 }
 
 // Join array of chunks to single array.
-export function flattenChunks (chunks) {
+function flattenChunks(chunks) {
   var i, l, len, pos, chunk, result;
 
   // calculate data length
@@ -36,10 +48,8 @@ export function flattenChunks (chunks) {
     result.set(chunk, pos);
     pos += chunk.length;
   }
-
   return result;
 }
-
-export var Buf8  = Uint8Array;
-export var Buf16 = Uint16Array;
-export var Buf32 = Int32Array;
+var Buf8 = exports.Buf8 = Uint8Array;
+var Buf16 = exports.Buf16 = Uint16Array;
+var Buf32 = exports.Buf32 = Int32Array;

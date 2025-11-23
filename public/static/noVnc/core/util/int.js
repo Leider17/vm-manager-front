@@ -1,3 +1,10 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.toSigned32bit = toSigned32bit;
+exports.toUnsigned32bit = toUnsigned32bit;
 /*
  * noVNC: HTML5 VNC client
  * Copyright (C) 2020 The noVNC authors
@@ -6,10 +13,9 @@
  * See README.md for usage and integration instructions.
  */
 
-export function toUnsigned32bit(toConvert) {
-    return toConvert >>> 0;
+function toUnsigned32bit(toConvert) {
+  return toConvert >>> 0;
 }
-
-export function toSigned32bit(toConvert) {
-    return toConvert | 0;
+function toSigned32bit(toConvert) {
+  return toConvert | 0;
 }

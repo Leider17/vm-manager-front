@@ -1,3 +1,10 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.decodeUTF8 = decodeUTF8;
+exports.encodeUTF8 = encodeUTF8;
 /*
  * noVNC: HTML5 VNC client
  * Copyright (C) 2019 The noVNC authors
@@ -7,22 +14,23 @@
  */
 
 // Decode from UTF-8
-export function decodeUTF8(utf8string, allowLatin1=false) {
-    try {
-        return decodeURIComponent(escape(utf8string));
-    } catch (e) {
-        if (e instanceof URIError) {
-            if (allowLatin1) {
-                // If we allow Latin1 we can ignore any decoding fails
-                // and in these cases return the original string
-                return utf8string;
-            }
-        }
-        throw e;
+function decodeUTF8(utf8string) {
+  var allowLatin1 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  try {
+    return decodeURIComponent(escape(utf8string));
+  } catch (e) {
+    if (e instanceof URIError) {
+      if (allowLatin1) {
+        // If we allow Latin1 we can ignore any decoding fails
+        // and in these cases return the original string
+        return utf8string;
+      }
     }
+    throw e;
+  }
 }
 
 // Encode to UTF-8
-export function encodeUTF8(DOMString) {
-    return unescape(encodeURIComponent(DOMString));
+function encodeUTF8(DOMString) {
+  return unescape(encodeURIComponent(DOMString));
 }
